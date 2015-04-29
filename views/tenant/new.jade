@@ -1,0 +1,63 @@
+extends ../layout
+block content
+    form.form-horizontal(method='post', autocomplete='off')
+        fieldset
+            // Form Name
+            legend Ny leietaker
+            .form-group
+                label.col-md-4.control-label(for='ssn') Personnummer
+                .col-md-4
+                    input#ssn.form-control.input-md(name='ssn', type='number', placeholder='', required='')
+            .form-group
+                label.col-md-4.control-label(for='first_name') Fornavn
+                .col-md-4
+                    input#first_name.form-control.input-md(name='first_name', type='text', placeholder='', required='')
+            .form-group
+                label.col-md-4.control-label(for='last_name') Etternavn
+                .col-md-4
+                    input#last_name.form-control.input-md(name='last_name', type='text', placeholder='', required='')
+            .form-group
+                label.col-md-4.control-label(for='phone') Telefon
+                .col-md-4
+                    input#phone.form-control.input-md(name='phone', type='tel', placeholder='', required='')
+            //.form-group
+                label.col-md-4.control-label(for='address') Adresse
+                .col-md-4
+                    select#address.form-control(name='address')
+                        option(value='1') John Colletts All&eacute; 110, 0870 OSLO
+                        option(value='2') Granlivegen 27, 0000 OSLO
+                        option(value='') Djupekloveien 11, 0000, OSLO
+            .form-group
+                label.col-md-4.control-label(for='mail') E-post
+                .col-md-4
+                    input#mail.form-control.input-md(name='mail', type='email', placeholder='')
+            hr
+            .form-group
+                label.col-md-4.control-label(for='save') Lagre leietaker
+                .col-md-4
+                    button#save.btn.btn-success(name='save') Lagre
+
+    script.
+        $(function () {
+            $('#save').on('click', function () {
+                $.post('./', {
+                    ssn: $('#ssn').val(),
+                    first_name: $('#first_name').val(),
+                    last_name: $('#last_name').val(),
+                    /*address: [{
+                     name: 'TODO',
+                     postcode: -1,
+                     region: 'TODO',
+                     municipality: 'TODO'
+                     }],*/
+                    phone: $('#phone').val(),
+                    mail: $('#mail').val(),
+                    lease: []
+                }, function (data) {
+                    window.location = 'list';
+                });
+
+                return false;
+            });
+
+        });

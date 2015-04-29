@@ -1,0 +1,25 @@
+{
+  "name": "NNSEmanager",
+  "version": "0.0.1",
+  "authors": [
+    "j0nas <jonas.jensen@msn.com>"
+  ],
+  "description": "Manger for NNSe",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/j0nas/NNSEmanager",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "bootstrap-table": "~1.7.0",
+    "sweetalert": "~0.5.0"
+  }
+}

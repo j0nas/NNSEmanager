@@ -1,0 +1,52 @@
+extends ../layout
+block content
+    script(src='/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
+    link(type='text/css' rel='stylesheet' href='/bower_components/bootstrap-table/dist/bootstrap-table.min.css')
+
+    script(src='/bower_components/sweetalert/lib/sweet-alert.min.js')
+    link(type='text/css' rel='stylesheet' href='/bower_components/sweetalert/lib/sweet-alert.css')
+    h1 Liste leietakere
+    br
+
+    table#tenants(data-toggle='table' data-url='/tenants/' data-show-toggle='true' data-show-columns='true' data-search='true' data-select-item-name='toolbar1')
+        thead
+            tr
+                th(data-field='ssn' data-sortable='true') Personnummer
+                th(data-field='first_name' data-sortable='true') Fornavn
+                th(data-field='last_name' data-sortable='true') Etternavn
+                th(data-field='phone' data-sortable='true') Telefon
+                th(data-field='mail' data-sortable='true') E-post
+                th(data-field='operate' data-formatter='operateFormatter' data-events='operateEvents') Handlinger
+    script.
+        function operateFormatter(value, row, index) {
+            return '<a class="edit ml10" style="padding-right: 10px" href="javascript:void(0)" title="Rediger"><i class="glyphicon glyphicon-edit"></i></a>' +
+                    '<a class="remove ml10" href="javascript:void(0)" title="Remove"><i class="glyphicon glyphicon-remove"></i></a>';
+        }
+
+        window.operateEvents = {
+            'click .edit': function (e, value, row, index) {
+                console.log(value, row, index);
+            },
+            'click .remove': function (e, value, row, index) {
+                console.log(row._id);
+                swal({
+                    title: 'Er du sikker?',
+                    text: 'Denne handlingen kan ikke reverseres',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Bekreft',
+                    cancelButtonText: 'Avbryt',
+                    closeOnConfirm: true
+                }, function () {
+                    $.ajax({
+                        url: '/tenants/' + row._id,
+                        type: 'DELETE',
+                        success: function (result) {
+                            console.log(result);
+                            $('#tenants').bootstrapTable('refresh');
+                        }
+                    });
+                });
+            }
+        };
