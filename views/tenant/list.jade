@@ -25,10 +25,11 @@ block content
 
         window.operateEvents = {
             'click .edit': function (e, value, row, index) {
-                console.log(value, row, index);
+                //console.log(value, row, index);
+                window.location = 'edit/' + row._id;
             },
             'click .remove': function (e, value, row, index) {
-                console.log(row._id);
+                //console.log(row._id);
                 swal({
                     title: 'Er du sikker?',
                     text: 'Denne handlingen kan ikke reverseres',

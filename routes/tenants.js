@@ -9,6 +9,14 @@ module.exports = function (tenantHandler) {
     router.get('/list', function (req, res, next) {
         res.render('tenant/list')
     });
+    router.get('/edit/:id', function (req, res, next) {
+        tenantHandler.getTenantById(req.params.id, function (data) {
+            res.render('tenant/edit', {
+                tenant: data,
+                id: req.params.id
+            })
+        })
+    });
 
 
     // COLLECTION URI RESTful API
@@ -18,7 +26,7 @@ module.exports = function (tenantHandler) {
             }
         )
     });
-    router.post('/', function (req, res, next) {
+    router.post('/', function (req, res) {
         tenantHandler.saveTenant(req.body, function (err) {
             if (err) {
                 console.log('An error has occurred: ' + JSON.stringify(err));
@@ -30,12 +38,21 @@ module.exports = function (tenantHandler) {
     });
 
     // ELEMENT URI RESTful API
-    router.post('/:id', function (req, res, next) {
+    router.post('/:id', function (req, res) {
         tenantHandler.getTenantById(req.params.id, function (result) {
             res.send(result);
         });
     });
-    router.delete('/:id', function (req, res, next) {
+
+
+    router.put('/:id', function (req, res) {
+        tenantHandler.updateTenantById(req.params.id, req.body, function () {
+            res.status(200).end();
+        });
+
+    });
+
+    router.delete('/:id', function (req, res) {
         tenantHandler.deleteTenantById(req.params.id, function (err) {
             res.send(err);
         });

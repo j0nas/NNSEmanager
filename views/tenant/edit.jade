@@ -1,0 +1,62 @@
+extends ../layout
+block content
+    form.form-horizontal(method='post', autocomplete='off')
+        fieldset
+            // Form Name
+            legend Ny leietaker
+            .form-group
+                label.col-md-4.control-label(for='ssn') Personnummer
+                .col-md-4
+                    input#ssn.form-control.input-md(name='ssn', type='number', placeholder='', required='', value='#{tenant.ssn}')
+            .form-group
+                label.col-md-4.control-label(for='first_name') Fornavn
+                .col-md-4
+                    input#first_name.form-control.input-md(name='first_name', type='text', placeholder='', required='', value='#{tenant.first_name}')
+            .form-group
+                label.col-md-4.control-label(for='last_name') Etternavn
+                .col-md-4
+                    input#last_name.form-control.input-md(name='last_name', type='text', placeholder='', required='', value='#{tenant.last_name}')
+            .form-group
+                label.col-md-4.control-label(for='phone') Telefon
+                .col-md-4
+                    input#phone.form-control.input-md(name='phone', type='tel', placeholder='', required='', value='#{tenant.phone}')
+            //.form-group
+                label.col-md-4.control-label(for='address') Adresse
+                .col-md-4
+                    select#address.form-control(name='address')
+                        option(value='1') John Colletts All&eacute; 110, 0870 OSLO
+                        option(value='2') Granlivegen 27, 0000 OSLO
+                        option(value='') Djupekloveien 11, 0000, OSLO
+            .form-group
+                label.col-md-4.control-label(for='mail') E-post
+                .col-md-4
+                    input#mail.form-control.input-md(name='mail', type='email', placeholder='', value='#{tenant.mail}')
+            hr
+            .form-group
+                label.col-md-4.control-label(for='save') Oppdater leietaker
+                .col-md-4
+                    button#update.btn.btn-success(name='update') Oppdater
+
+    script.
+        $(function () {
+            $('#update').on('click', function () {
+                console.log('PUT');
+
+                $.ajax({
+                    url: '../#{tenant.id}',
+                    type: 'PUT',
+                    data: {
+                        ssn: $('#ssn').val(),
+                        first_name: $('#first_name').val(),
+                        last_name: $('#last_name').val(),
+                        phone: $('#phone').val(),
+                        mail: $('#mail').val(),
+                    },
+                    success: function (result) {
+                        window.location = '/tenants/list';
+                    }
+                });
+
+                return false;
+            });
+        });

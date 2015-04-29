@@ -7,6 +7,12 @@ module.exports = {
         });
     },
 
+    updateTenantById: function (id, obj, next) {
+        tenantModel.findOneAndUpdate({_id: id}, obj, {new: true}, function () {
+            next();
+        })
+    },
+
     getAllTenants: function (next) {
         tenantModel.find(function (err, collection) {
             next(collection);

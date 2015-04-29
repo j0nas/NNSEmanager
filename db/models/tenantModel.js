@@ -9,15 +9,15 @@ var mongoose = require('mongoose');
  });*/
 
 var tenantSchema = mongoose.Schema({
-    ssn: Number,
+    ssn: String,
     first_name: String,
     last_name: String,
     //address: mongoose.Schema.Types.ObjectId, ref: 'address',
-    phone: Number,
+    phone: String,
     mail: String,
     lease: [{
         lessor: String,
-        room: Number,
+        room: String,
         residency_start_date: Date,
         contract_termination_date: Date,
         residency_end_date: Date
