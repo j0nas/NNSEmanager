@@ -9,7 +9,7 @@ block content
     br
 
     table#tenants(data-toggle='table' data-url='/tenants/' data-show-toggle='true' data-show-columns='true' data-search='true' data-select-item-name='toolbar1')
-        thead
+        thead(align='left')
             tr
                 th(data-field='ssn' data-sortable='true') Personnummer
                 th(data-field='first_name' data-sortable='true') Fornavn
@@ -17,7 +17,24 @@ block content
                 th(data-field='phone' data-sortable='true') Telefon
                 th(data-field='mail' data-sortable='true') E-post
                 th(data-field='operate' data-formatter='operateFormatter' data-events='operateEvents') Handlinger
+
+    button.btn.btn-default#to-pdf(style='margin-top: 5px;') Eksporter til PDF
+
     script.
+        $(function () {
+            $('#to-pdf').on('click', function () {
+                // Hide 'operations' column so it won't be printed to pdf.
+                $('#tenants').bootstrapTable('hideColumn', 'operate');
+
+                $.post('pdf', {
+                    table: $('#tenants').html()
+                }, function (res) {
+                    swal(res);
+                    $('#tenants').bootstrapTable('showColumn', 'operate');
+                });
+            })
+        })
+
         function operateFormatter(value, row, index) {
             return '<a class="edit ml10" style="padding-right: 10px" href="javascript:void(0)" title="Rediger"><i class="glyphicon glyphicon-edit"></i></a>' +
                     '<a class="remove ml10" href="javascript:void(0)" title="Remove"><i class="glyphicon glyphicon-remove"></i></a>';
@@ -32,7 +49,7 @@ block content
                 //console.log(row._id);
                 swal({
                     title: 'Er du sikker?',
-                    text: 'Denne handlingen kan ikke reverseres',
+                    text: 'Denne handlingen kan ikke reverseres.',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#DD6B55',

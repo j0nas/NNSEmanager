@@ -19,6 +19,28 @@ module.exports = function (tenantHandler) {
     });
 
 
+    router.post('/pdf', function (req, res) {
+        if (!req.body.table) {
+            res.sendStatus(400);
+            return;
+        }
+
+        var fs = require('fs');
+        var pdf = require('html-pdf');
+        var html = '<table style="width: 100%;">' + req.body.table + '</table>';
+        var options = {
+            filename: './Tenants.pdf',
+            format: 'Letter',
+            border: '2.5cm'
+        };
+
+        pdf.create(html, options).toFile(function (error, result) {
+            console.log(error ? error : result);
+            res.sendStatus(error ? 500 : 200);
+        });
+
+    });
+
     // COLLECTION URI RESTful API
     router.get('/', function (req, res, next) {
         tenantHandler.getAllTenants(function (collection) {
@@ -43,15 +65,12 @@ module.exports = function (tenantHandler) {
             res.send(result);
         });
     });
-
-
     router.put('/:id', function (req, res) {
         tenantHandler.updateTenantById(req.params.id, req.body, function () {
             res.status(200).end();
         });
 
     });
-
     router.delete('/:id', function (req, res) {
         tenantHandler.deleteTenantById(req.params.id, function (err) {
             res.send(err);
