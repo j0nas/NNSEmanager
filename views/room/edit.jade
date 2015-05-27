@@ -1,0 +1,37 @@
+extends ../layout
+block content
+    form.form-horizontal(method='post', autocomplete='off')
+        fieldset
+            legend Oppdater rom
+            .form-group
+                label.col-md-4.control-label(for='number') Romnummer
+                .col-md-4
+                    input#number.form-control.input-md(name='number', type='number', placeholder='', required='', value='#{room.number}')
+            .form-group
+                label.col-md-4.control-label(for='price') Leie
+                .col-md-4
+                    input#price.form-control.input-md(name='price', type='number', placeholder='', required='', value='#{room.price}')
+
+            .form-group
+                label.col-md-4.control-label(for='save') Oppdater rom
+                .col-md-4
+                    button#update.btn.btn-success(name='update') Oppdater
+
+    script.
+        $(function () {
+            $('#update').on('click', function () {
+                $.ajax({
+                    url: '../#{room.id}',
+                    type: 'PUT',
+                    data: {
+                        number: $('#number').val(),
+                        price: $('#price').val(),
+                    },
+                    success: function (result) {
+                        window.location = '/rooms/list';
+                    }
+                });
+
+                return false;
+            });
+        });

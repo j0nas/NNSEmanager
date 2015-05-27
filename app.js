@@ -24,9 +24,11 @@ app.use('/', require('./routes/index'));
 
 var tenantHandler = require(path.join(__dirname, "db/handlers/tenantHandler.js"));
 var mailboxHandler = require(path.join(__dirname, "db/handlers/mailboxHandler.js"));
+var roomHandler = require(path.join(__dirname, "db/handlers/roomHandler.js"));
 
 app.use('/tenants', require('./routes/tenants')(tenantHandler, mailboxHandler));
 app.use('/mailboxes', require('./routes/mailboxes')(mailboxHandler));
+app.use('/rooms', require('./routes/rooms')(roomHandler));
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/NNSEdb', function (error) {

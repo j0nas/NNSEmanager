@@ -42,7 +42,7 @@ module.exports = {
     },
 
     getAllAvailableMailboxes: function (next) {
-        mailboxModel.find({'tenantId': ""}, function (err, collection) {
+        mailboxModel.find({'tenant_id': ''}, function (err, collection) {
             next(collection);
         });
     },
@@ -56,7 +56,7 @@ module.exports = {
     saveMailbox: function (tenant, next) {
         var mailboxToSave = new mailboxModel(tenant);
         mailboxToSave.save(function (err, result) {
-            console.log("mailboxHandler: " + err ? "err: " + err : result);
+            console.log('mailboxHandler: ' + err ? 'err: ' + err : result);
             next(err);
         });
     }

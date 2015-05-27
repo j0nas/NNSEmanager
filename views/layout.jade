@@ -22,10 +22,25 @@ html
                     a.navbar-brand(href='#') NNSE
 
                 #collapsed-nav.collapse.navbar-collapse
-                    ul.nav.navbar-nav
-                        li: a(href='/tenants/list') Liste leietakere
-                        li: a(href='/tenants/new') Opprette ny leietaker
-                        li: a(href='/mailboxes/list') List postbokser
-                        li: a(href='/mailboxes/new') Opprette ny postboks
+                    .btn-group
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false') Leietakere
+                            span.caret
+                        ul.dropdown-menu(role='menu')
+                            li: a(href='/tenants/list') Liste leietakere
+                            li: a(href='/tenants/new') Opprette ny leietaker
+
+                    .btn-group
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false') Postbokser
+                            span.caret
+                        ul.dropdown-menu(role='menu')
+                            li: a(href='/mailboxes/list') Liste postbokser
+                            li: a(href='/mailboxes/new') Opprette ny postboks
+
+                    .btn-group
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false') Rom
+                            span.caret
+                        ul.dropdown-menu(role='menu')
+                            li: a(href='/rooms/list') Liste rom
+                            li: a(href='/rooms/new') Opprette nytt rom
         br
         block content
