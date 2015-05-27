@@ -34,7 +34,13 @@ block content
             .form-group
                 label.col-md-4.control-label(for='mailbox') Postboks
                 .col-md-4: select#mailbox.form-control(name='mailbox')
-            hr
+            .form-group
+                label.col-md-4.control-label(for='room') Rom
+                .col-md-4: select#room.form-control(name='room')
+
+            .form-group
+                .col-md-4
+                .col-md-4: hr
             .form-group
                 label.col-md-4.control-label(for='save') Lagre leietaker
                 .col-md-4
@@ -42,23 +48,55 @@ block content
 
     script.
         $(function () {
-            $.get('../mailboxes', function (data) {
+            $.get('/mailboxes', function (data) {
                 if (data == null) {
-                    var errMsg = 'Could not fetch mailboxes!';
-                    console.log(errMsg);
-                    swal(errMsg);
+                    $('#save').prop('disabled', true);
+                    swal('Kan ikke opprette bruker', 'Kunne ikke hente postboks-data.', 'error');
                     return;
                 }
 
                 var mailboxes = [];
+                var added = false;
                 $.each(data, function (index, obj) {
                     if (obj.tenant_id.length < 1) {
                         // TODO: move this to server-side
                         mailboxes.push('<option value="' + obj.box_number + '">' + obj.box_number + '</option>');
+                        added = true;
                     }
                 });
 
-                $('#mailbox').html(mailboxes.join(''))
+                if (!added) {
+                    $('#save').prop('disabled', true);
+                    swal('Kan ikke opprette bruker', 'Ingen ledige postbokser tilgjengelig.', 'error');
+                    return;
+                } else {
+                    $('#mailbox').html(mailboxes.join(''))
+                }
+            });
+
+            $.get('/rooms', function (data) {
+                if (data == null) {
+                    $('#save').prop('disabled', true);
+                    swal('Kan ikke opprette bruker', 'Kunne ikke hente rom-data.', 'error');
+                    return;
+                }
+
+                var rooms = [];
+                var added = false;
+                $.each(data, function (index, obj) {
+                    if (obj.tenant_id == null || obj.tenant_id.length < 1) {
+                        // TODO: move this to server-side
+                        rooms.push('<option value="' + obj.number + '">' + obj.number + '</option>');
+                        added = true;
+                    }
+                });
+
+                if (!added) {
+                    $('#save').prop('disabled', true);
+                    swal('Kan ikke opprette bruker', 'Ingen ledige rom tilgjengelig.', 'error');
+                } else {
+                    $('#room').html(rooms.join(''))
+                }
             });
 
             $('#save').on('click', function () {
@@ -75,6 +113,7 @@ block content
                     phone: $('#phone').val(),
                     mail: $('#mail').val(),
                     mailbox: $('#mailbox').val(),
+                    room: $('#room').val(),
                     lease: []
                 }, function (data) {
                     window.location = 'list';

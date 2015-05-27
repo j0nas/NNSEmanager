@@ -36,6 +36,11 @@ block content
                 .col-md-4
                     select#mailbox.form-control(name='mailbox')
                         option(value='#{tenant.mailbox}', selected='selected') #{tenant.mailbox}
+            .form-group
+                label.col-md-4.control-label(for='mailbox') Rom
+                .col-md-4
+                    select#room.form-control(name='room')
+                        option(value='#{tenant.room}', selected='selected') #{tenant.room}
             hr
             .form-group
                 label.col-md-4.control-label(for='save') Oppdater leietaker
@@ -46,16 +51,29 @@ block content
         $(function () {
             $.get('/mailboxes', function (data) {
                 if (data == null) {
-                    var errMsg = 'Could not fetch mailboxes!';
-                    console.log(errMsg);
-                    swal(errMsg);
+                    swal('Feil', 'Kunne ikke hente postkasse-data', 'error');
                     return;
                 }
 
                 var mailboxesSelect = $('#mailbox');
                 $.each(data, function (obj, val) {
-                    if (val.tenant_id.length < 1) {
+                    console.log(val);
+                    if (!val.tenant_id) {
                         mailboxesSelect.append('<option value="' + val.box_number + '">' + val.box_number + '</option>');
+                    }
+                });
+            });
+
+            $.get('/rooms', function (data) {
+                if (data == null) {
+                    swal('Feil', 'Kunne ikke hente rom-data', 'error');
+                    return;
+                }
+
+                var roomsSelect = $('#room');
+                $.each(data, function (obj, val) {
+                    if (!val.tenant_id) {
+                        roomsSelect.append('<option value="' + val.number + '">' + val.number + '</option>');
                     }
                 });
             });
@@ -71,6 +89,7 @@ block content
                         phone: $('#phone').val(),
                         mail: $('#mail').val(),
                         mailbox: $('#mailbox').val(),
+                        room: $('#room').val(),
                     },
                     success: function (result) {
                         window.location = '/tenants/list';

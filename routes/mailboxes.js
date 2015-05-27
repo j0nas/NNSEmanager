@@ -50,9 +50,7 @@ module.exports = function (mailboxHandler) {
     router.post('/', function (req, res) {
         mailboxHandler.getMailboxByNumber(req.body.box_number, function (result) {
             if (result != null) {
-                var errMsg = 'Postboks med dette nummeret eksisterer allerede.';
-                console.log(errMsg);
-                res.send({err: errMsg});
+                res.send({err: 'Postboks med dette nummeret eksisterer allerede.'});
                 return;
             }
 

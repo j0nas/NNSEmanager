@@ -7,6 +7,7 @@ var tenantSchema = mongoose.Schema({
     phone: String,
     mail: String,
     mailbox: Number,
+    room: Number,
     lease: [{
         lessor: String,
         room: String,

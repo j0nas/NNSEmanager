@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-module.exports = function (tenantHandler, mailboxHandler) {
+module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
     // FRONT-END VIEW RENDERING
     router.get('/new', function (req, res, next) {
         res.render('tenant/new')
@@ -54,7 +54,8 @@ module.exports = function (tenantHandler, mailboxHandler) {
                 console.log('An error has occurred: ' + JSON.stringify(err));
                 res.redirect(500, '/')
             } else {
-                mailboxHandler.assignMailboxToTenant(tenant._id, tenant.mailbox)
+                mailboxHandler.assignMailboxToTenant(tenant._id, tenant.mailbox);
+                roomHandler.assignRoomToTenant(tenant._id, tenant.room);
                 res.status(201).end();
             }
         });
@@ -69,13 +70,19 @@ module.exports = function (tenantHandler, mailboxHandler) {
     router.put('/:id', function (req, res) {
         // TODO: sanetize req.params.id
         mailboxHandler.unassignMailboxFromTenantById(req.params.id);
+        roomHandler.unassignRoomFromTenantById(req.params.id);
+
         tenantHandler.updateTenantById(req.params.id, req.body, function () {
             res.status(200).end();
         });
+
         mailboxHandler.assignMailboxToTenant(req.params.id, req.body.mailbox);
+        roomHandler.assignRoomToTenant(req.params.id, req.body.room);
     });
     router.delete('/:id', function (req, res) {
         mailboxHandler.unassignMailboxFromTenantById(req.params.id);
+        roomHandler.unassignRoomFromTenantById(req.params.id);
+
         tenantHandler.deleteTenantById(req.params.id, function (err) {
             res.send(err);
         });

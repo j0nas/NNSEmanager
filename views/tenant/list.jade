@@ -2,9 +2,6 @@ extends ../layout
 block content
     script(src='/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
     link(type='text/css' rel='stylesheet' href='/bower_components/bootstrap-table/dist/bootstrap-table.min.css')
-
-    script(src='/bower_components/sweetalert/lib/sweet-alert.min.js')
-    link(type='text/css' rel='stylesheet' href='/bower_components/sweetalert/lib/sweet-alert.css')
     h1 Leietakere
     br
 
@@ -17,6 +14,7 @@ block content
                 th(data-field='phone' data-sortable='true') Telefon
                 th(data-field='mail' data-sortable='true') E-post
                 th(data-field='mailbox' data-sortable='true') Postboks
+                th(data-field='room' data-sortable='true') Rom
                 th(data-field='operate' data-formatter='operateFormatter' data-events='operateEvents') Handlinger
 
     button.btn.btn-default#to-pdf(style='margin-top: 5px;') Eksporter til PDF
@@ -44,7 +42,7 @@ block content
         window.operateEvents = {
             'click .edit': function (e, value, row, index) {
                 //console.log(value, row, index);
-                window.location = 'edit/' + row._id;
+                window.location = '/tenants/edit/' + row._id;
             },
             'click .remove': function (e, value, row, index) {
                 //console.log(row._id);

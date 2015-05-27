@@ -2,9 +2,6 @@ extends ../layout
 block content
     script(src='/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
     link(type='text/css' rel='stylesheet' href='/bower_components/bootstrap-table/dist/bootstrap-table.min.css')
-
-    script(src='/bower_components/sweetalert/lib/sweet-alert.min.js')
-    link(type='text/css' rel='stylesheet' href='/bower_components/sweetalert/lib/sweet-alert.css')
     h1 Rom
     br
 
@@ -40,7 +37,7 @@ block content
 
         window.operateEvents = {
             'click .edit': function (e, value, row, index) {
-                window.location = 'edit/' + row._id;
+                window.location = '/rooms/edit/' + row._id;
             },
             'click .remove': function (e, value, row, index) {
                 swal({
