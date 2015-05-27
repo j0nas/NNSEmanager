@@ -10,7 +10,7 @@ module.exports = function (mailboxHandler) {
         res.render('mailbox/list')
     });
     router.get('/edit/:id', function (req, res, next) {
-        mailboxHandler.getmailboxById(req.params.id, function (data) {
+        mailboxHandler.getMailboxById(req.params.id, function (data) {
             res.render('mailbox/edit', {
                 mailbox: data,
                 id: req.params.id

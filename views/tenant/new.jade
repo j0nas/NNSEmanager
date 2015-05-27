@@ -51,10 +51,10 @@ block content
                 }
 
                 var mailboxes = [];
-                $.each(data, function (obj, val) {
-                    if (val.tenant_id.length < 1) {
+                $.each(data, function (index, obj) {
+                    if (obj.tenant_id.length < 1) {
                         // TODO: move this to server-side
-                        mailboxes.push('<option value="' + val.box_number + '">' + val.box_number + '</option>');
+                        mailboxes.push('<option value="' + obj.box_number + '">' + obj.box_number + '</option>');
                     }
                 });
 
@@ -74,7 +74,7 @@ block content
                      }],*/
                     phone: $('#phone').val(),
                     mail: $('#mail').val(),
-                    mailbox_number: $('#mailbox').val(),
+                    mailbox: $('#mailbox').val(),
                     lease: []
                 }, function (data) {
                     window.location = 'list';

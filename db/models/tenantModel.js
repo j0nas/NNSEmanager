@@ -15,6 +15,7 @@ var tenantSchema = mongoose.Schema({
     //address: mongoose.Schema.Types.ObjectId, ref: 'address',
     phone: String,
     mail: String,
+    mailbox: Number,
     lease: [{
         lessor: String,
         room: String,

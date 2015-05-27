@@ -19,6 +19,22 @@ module.exports = {
         })
     },
 
+    unassignMailboxFromTenantById: function (id, next) {
+        mailboxModel.findOneAndUpdate({tenant_id: id}, {tenant_id: ''}, {new: true}, function () {
+            if (next) {
+                next();
+            }
+        });
+    },
+
+    assignMailboxToTenant: function (tenant_id, box, next) {
+        mailboxModel.findOneAndUpdate({box_number: box}, {tenant_id: tenant_id}, {new: true}, function () {
+            if (next) {
+                next();
+            }
+        });
+    },
+
     getAllMailboxes: function (next) {
         mailboxModel.find(function (err, collection) {
             next(collection);

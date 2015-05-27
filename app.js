@@ -23,9 +23,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/index'));
 
 var tenantHandler = require(path.join(__dirname, "db/handlers/tenantHandler.js"));
-app.use('/tenants', require('./routes/tenants')(tenantHandler));
-
 var mailboxHandler = require(path.join(__dirname, "db/handlers/mailboxHandler.js"));
+
+app.use('/tenants', require('./routes/tenants')(tenantHandler, mailboxHandler));
 app.use('/mailboxes', require('./routes/mailboxes')(mailboxHandler));
 
 var mongoose = require('mongoose');

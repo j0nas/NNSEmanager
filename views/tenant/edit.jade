@@ -31,6 +31,11 @@ block content
                 label.col-md-4.control-label(for='mail') E-post
                 .col-md-4
                     input#mail.form-control.input-md(name='mail', type='email', placeholder='', value='#{tenant.mail}')
+            .form-group
+                label.col-md-4.control-label(for='mailbox') Postboks
+                .col-md-4
+                    select#mailbox.form-control(name='mailbox')
+                        option(value='#{tenant.mailbox}', selected='selected') #{tenant.mailbox}
             hr
             .form-group
                 label.col-md-4.control-label(for='save') Oppdater leietaker
@@ -39,9 +44,23 @@ block content
 
     script.
         $(function () {
-            $('#update').on('click', function () {
-                console.log('PUT');
+            $.get('/mailboxes', function (data) {
+                if (data == null) {
+                    var errMsg = 'Could not fetch mailboxes!';
+                    console.log(errMsg);
+                    swal(errMsg);
+                    return;
+                }
 
+                var mailboxesSelect = $('#mailbox');
+                $.each(data, function (obj, val) {
+                    if (val.tenant_id.length < 1) {
+                        mailboxesSelect.append('<option value="' + val.box_number + '">' + val.box_number + '</option>');
+                    }
+                });
+            });
+
+            $('#update').on('click', function () {
                 $.ajax({
                     url: '../#{tenant.id}',
                     type: 'PUT',
@@ -51,6 +70,7 @@ block content
                         last_name: $('#last_name').val(),
                         phone: $('#phone').val(),
                         mail: $('#mail').val(),
+                        mailbox: $('#mailbox').val(),
                     },
                     success: function (result) {
                         window.location = '/tenants/list';
