@@ -1,0 +1,39 @@
+extends ../layout
+block content
+    form.form-horizontal(method='post', autocomplete='off')
+        fieldset
+            // Form Name
+            legend Ny postboks
+            .form-group
+                label.col-md-4.control-label(for='box_number') Boksnummer
+                .col-md-4
+                    input#box_number.form-control.input-md(name='box_number', type='number', placeholder='', required='', value='#{mailbox.box_number}')
+            .form-group
+                label.col-md-4.control-label(for='tenant_id') Bruker-ID
+                .col-md-4
+                    input#tenant_id.form-control.input-md(name='tenant_id', type='text', placeholder='', required='', value='#{mailbox.tenant_id}')
+            hr
+            .form-group
+                label.col-md-4.control-label(for='save') Oppdater postboks
+                .col-md-4
+                    button#update.btn.btn-success(name='update') Oppdater
+    script.
+        $(function () {
+            $('#update').on('click', function () {
+                console.log('PUT');
+
+                $.ajax({
+                    url: '../#{mailbox.id}',
+                    type: 'PUT',
+                    data: {
+                        box_number: $('#box_number').val(),
+                        tenant_id: $('#tenant_id').val(),
+                    },
+                    success: function (result) {
+                        window.location = '/mailboxes/list';
+                    }
+                });
+
+                return false;
+            });
+        });

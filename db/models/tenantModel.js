@@ -28,6 +28,6 @@ var tenant = mongoose.model('tenant', tenantSchema);
 //var address = mongoose.model('address', addressSchema);
 
 module.exports = {
-    Tenant: tenant,
+    Tenant: tenant
     //Address: address
 }

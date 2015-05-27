@@ -1,0 +1,42 @@
+extends ../layout
+block content
+    script(src='/bower_components/sweetalert/lib/sweet-alert.min.js')
+    link(type='text/css' rel='stylesheet' href='/bower_components/sweetalert/lib/sweet-alert.css')
+
+    form.form-horizontal(method='post', autocomplete='off')
+        fieldset
+            // Form Name
+            legend Ny postboks
+            .form-group
+                label.col-md-4.control-label(for='box_number') Boksnummer
+                .col-md-4
+                    input#box_number.form-control.input-md(name='box_number', type='number', placeholder='', required='')
+            .form-group
+                label.col-md-4.control-label(for='tenant_id') Bruker-ID
+                .col-md-4
+                    input#tenant_id.form-control.input-md(name='box_number', type='text', placeholder='', required='')
+            hr
+            .form-group
+                label.col-md-4.control-label(for='save') Lagre postboks
+                .col-md-4
+                    button#save.btn.btn-success(name='save') Lagre
+
+    script.
+        $(function () {
+            $('#save').on('click', function () {
+                $.post('./', {
+                    box_number: $('#box_number').val(),
+                    tenant_id: $('#tenant_id').val(),
+                }, function (data) {
+                    if (data.err) {
+                        swal(data.err);
+                        return;
+                    }
+
+                    window.location = 'list';
+                });
+
+                return false;
+            });
+
+        });

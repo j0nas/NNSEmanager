@@ -13,15 +13,20 @@ app.set('json spaces', 4);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+//app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/', require('./routes/index'));
+
 var tenantHandler = require(path.join(__dirname, "db/handlers/tenantHandler.js"));
 app.use('/tenants', require('./routes/tenants')(tenantHandler));
+
+var mailboxHandler = require(path.join(__dirname, "db/handlers/mailboxHandler.js"));
+app.use('/mailboxes', require('./routes/mailboxes')(mailboxHandler));
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/NNSEdb', function (error) {

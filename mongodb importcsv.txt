@@ -1,0 +1,3 @@
+mongoimport.exe --db NNSEdb --collection tenants --type csv --headerline --file "C:\Users\Jonas\Desktop\personer.csv"
+
+// Remember that Excel saves everything as semicolon-separated values; replace all semicolons with commas in Notepad.

@@ -31,6 +31,9 @@ block content
                 label.col-md-4.control-label(for='mail') E-post
                 .col-md-4
                     input#mail.form-control.input-md(name='mail', type='email', placeholder='')
+            .form-group
+                label.col-md-4.control-label(for='mailbox') Postboks
+                .col-md-4: select#mailbox.form-control(name='mailbox')
             hr
             .form-group
                 label.col-md-4.control-label(for='save') Lagre leietaker
@@ -39,6 +42,25 @@ block content
 
     script.
         $(function () {
+            $.get('../mailboxes', function (data) {
+                if (data == null) {
+                    var errMsg = 'Could not fetch mailboxes!';
+                    console.log(errMsg);
+                    swal(errMsg);
+                    return;
+                }
+
+                var mailboxes = [];
+                $.each(data, function (obj, val) {
+                    if (val.tenant_id.length < 1) {
+                        // TODO: move this to server-side
+                        mailboxes.push('<option value="' + val.box_number + '">' + val.box_number + '</option>');
+                    }
+                });
+
+                $('#mailbox').html(mailboxes.join(''))
+            });
+
             $('#save').on('click', function () {
                 $.post('./', {
                     ssn: $('#ssn').val(),
@@ -52,6 +74,7 @@ block content
                      }],*/
                     phone: $('#phone').val(),
                     mail: $('#mail').val(),
+                    mailbox_number: $('#mailbox').val(),
                     lease: []
                 }, function (data) {
                     window.location = 'list';
