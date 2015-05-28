@@ -9,11 +9,11 @@ var tenantSchema = mongoose.Schema({
     mailbox: Number,
     room: Number,
     lease: [{
-        lessor: String,
-        room: String,
+        //lessor: String,
+        //room: Number,
         residency_start_date: Date,
         contract_termination_date: Date,
-        residency_end_date: Date
+        //residency_end_date: Date
     }]
 });
 

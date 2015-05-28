@@ -14,7 +14,6 @@ html
         script(src='/bower_components/sweetalert/lib/sweet-alert.min.js')
         link(type='text/css' rel='stylesheet' href='/bower_components/sweetalert/lib/sweet-alert.css')
 
-
     body
         nav.navbar.navbar-default
             .container-fluid
@@ -27,24 +26,27 @@ html
 
                 #collapsed-nav.collapse.navbar-collapse
                     .btn-group
-                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false') Leietakere&nbsp
+                        a.btn.btn-default(type='button', href='/tenants/list') Leietakere
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false')
+                            span.sr-only Toggle Dropdown
                             span.caret
                         ul.dropdown-menu(role='menu')
-                            li: a(href='/tenants/list') Liste leietakere
                             li: a(href='/tenants/new') Opprette ny leietaker
 
                     .btn-group
-                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false') Postbokser&nbsp
+                        a.btn.btn-default(type='button', href='/mailboxes/list') Postbokser
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false')
+                            span.sr-only Toggle Dropdown
                             span.caret
                         ul.dropdown-menu(role='menu')
-                            li: a(href='/mailboxes/list') Liste postbokser
                             li: a(href='/mailboxes/new') Opprette ny postboks
 
                     .btn-group
-                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false') Rom&nbsp
+                        a.btn.btn-default(type='button', href='/rooms/list') Rom
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false')
+                            span.sr-only Toggle Dropdown
                             span.caret
                         ul.dropdown-menu(role='menu')
-                            li: a(href='/rooms/list') Liste rom
                             li: a(href='/rooms/new') Opprette nytt rom
         br
         block content
