@@ -2,8 +2,8 @@ extends ../layout
 block content
     form.form-horizontal(method='post', autocomplete='off')
         fieldset
-            // Form Name
-            legend Ny leietaker
+            .form-group
+                label.col-md-4.control-label Ny leietaker
             .form-group
                 label.col-md-4.control-label(for='ssn') Personnummer
                 .col-md-4
@@ -20,32 +20,71 @@ block content
                 label.col-md-4.control-label(for='phone') Telefon
                 .col-md-4
                     input#phone.form-control.input-md(name='phone', type='tel', placeholder='', required='', value='#{tenant.phone}')
-            //.form-group
-                label.col-md-4.control-label(for='address') Adresse
-                .col-md-4
-                    select#address.form-control(name='address')
-                        option(value='1') John Colletts All&eacute; 110, 0870 OSLO
-                        option(value='2') Granlivegen 27, 0000 OSLO
-                        option(value='') Djupekloveien 11, 0000, OSLO
             .form-group
                 label.col-md-4.control-label(for='mail') E-post
                 .col-md-4
                     input#mail.form-control.input-md(name='mail', type='email', placeholder='', value='#{tenant.mail}')
+
             .form-group
-                label.col-md-4.control-label(for='mailbox') Postboks
-                .col-md-4
-                    select#mailbox.form-control(name='mailbox')
-                        option(value='#{tenant.mailbox}', selected='selected') #{tenant.mailbox}
-            .form-group
-                label.col-md-4.control-label(for='mailbox') Rom
-                .col-md-4
-                    select#room.form-control(name='room')
-                        option(value='#{tenant.room}', selected='selected') #{tenant.room}
-            hr
-            .form-group
-                label.col-md-4.control-label(for='save') Oppdater leietaker
+                label.col-md-4.control-label(for='update') Oppdater leietaker
                 .col-md-4
                     button#update.btn.btn-success(name='update') Oppdater
+
+            .form-group
+                .col-md-4
+                .col-md-4: hr
+
+            if tenant.lease[tenant.lease.length - 1].active
+                .form-group
+                    label.col-md-4.control-label Gjeldende leieforhold
+                .form-group
+                    label.col-md-4.control-label(for='startdate') Startdato
+                    .col-md-4 #{tenant.lease[tenant.lease.length - 1].contract_start_date}
+                .form-group
+                    label.col-md-4.control-label(for='startdate') Sluttdato
+                    .col-md-4 #{tenant.lease[tenant.lease.length - 1].contract_termination_date}
+                .form-group
+                    label.col-md-4.control-label(for='startdate') Rom
+                    .col-md-4 #{tenant.lease[tenant.lease.length - 1].room}
+                .form-group
+                    label.col-md-4.control-label(for='startdate') Postboks
+                    .col-md-4 #{tenant.lease[tenant.lease.length - 1].mailbox}
+                .form-group
+                    label.col-md-4.control-label(for='startdate') Depositum
+                    .col-md-4 #{tenant.lease[tenant.lease.length - 1].safety_deposit}
+                .form-group
+                    label.col-md-4.control-label(for='terminatelease') Avslutt leieforhold
+                    .col-md-4: button#terminatelease.btn.btn-danger(name='terminatelease') Avslutt
+            else
+                .form-group
+                    label.col-md-4.control-label Nytt leieforhold
+                .form-group
+                    label.col-md-4.control-label(for='startdate') Startdato
+                    .col-md-4
+                        input#startdate.form-control.input-md(name='startdate', type='date', placeholder='', value='')
+                .form-group
+                    label.col-md-4.control-label(for='enddate') Sluttdato
+                    .col-md-4
+                        input#enddate.form-control.input-md(name='enddate', type='date', placeholder='', value='')
+                .form-group
+                    label.col-md-4.control-label(for='deposit') Depositum
+                    .col-md-4
+                        input#deposit.form-control.input-md(name='deposit', type='number', placeholder='', value='')
+                .form-group
+                    label.col-md-4.control-label(for='mailbox') Postboks
+                    .col-md-4
+                        select#mailbox.form-control(name='mailbox')
+                            option(value='#{tenant.mailbox}', selected='selected') #{tenant.mailbox}
+                .form-group
+                    label.col-md-4.control-label(for='mailbox') Rom
+                    .col-md-4
+                        select#room.form-control(name='room')
+                            option(value='#{tenant.room}', selected='selected') #{tenant.room}
+                .form-group
+                    label.col-md-4.control-label(for='newlease') Opprett nytt leieforhold
+                    .col-md-4
+                        button#newlease.btn.btn-success(name='newlease') Nytt leieforhold
+
 
     script.
         $(function () {
@@ -88,8 +127,38 @@ block content
                         last_name: $('#last_name').val(),
                         phone: $('#phone').val(),
                         mail: $('#mail').val(),
-                        mailbox: $('#mailbox').val(),
+                    },
+                    success: function (result) {
+                        window.location = '/tenants/list';
+                    }
+                });
+
+                return false;
+            });
+
+            $('#terminatelease').on('click', function () {
+                $.ajax({
+                    url: '../lease/#{tenant.id}',
+                    type: 'DELETE',
+                    success: function (result) {
+                        window.location = '/edit/#{tenant.id}';
+                    }
+                });
+
+                return false;
+            });
+
+            $('#newlease').on('click', function () {
+                $.ajax({
+                    url: '../lease/#{tenant.id}',
+                    type: 'PUT',
+                    data: {
+                        contract_start_date: $('#startdate').val(),
+                        contract_termination_date: $('#enddate').val(),
                         room: $('#room').val(),
+                        mailbox: $('#mailbox').val(),
+                        safety_deposit: $('#deposit').val(),
+                        active: true
                     },
                     success: function (result) {
                         window.location = '/tenants/list';

@@ -31,12 +31,6 @@ block content
                 label.col-md-4.control-label(for='mail') E-post
                 .col-md-4
                     input#mail.form-control.input-md(name='mail', type='email', placeholder='')
-            .form-group
-                label.col-md-4.control-label(for='mailbox') Postboks
-                .col-md-4: select#mailbox.form-control(name='mailbox')
-            .form-group
-                label.col-md-4.control-label(for='room') Rom
-                .col-md-4: select#room.form-control(name='room')
 
             .form-group
                 .col-md-4
@@ -48,72 +42,13 @@ block content
 
     script.
         $(function () {
-            $.get('/mailboxes', function (data) {
-                if (data == null) {
-                    $('#save').prop('disabled', true);
-                    swal('Kan ikke opprette bruker', 'Kunne ikke hente postboks-data.', 'error');
-                    return;
-                }
-
-                var mailboxes = [];
-                var added = false;
-                $.each(data, function (index, obj) {
-                    if (obj.tenant_id.length < 1) {
-                        // TODO: move this to server-side
-                        mailboxes.push('<option value="' + obj.box_number + '">' + obj.box_number + '</option>');
-                        added = true;
-                    }
-                });
-
-                if (!added) {
-                    $('#save').prop('disabled', true);
-                    swal('Kan ikke opprette bruker', 'Ingen ledige postbokser tilgjengelig.', 'error');
-                    return;
-                } else {
-                    $('#mailbox').html(mailboxes.join(''))
-                }
-            });
-
-            $.get('/rooms', function (data) {
-                if (data == null) {
-                    $('#save').prop('disabled', true);
-                    swal('Kan ikke opprette bruker', 'Kunne ikke hente rom-data.', 'error');
-                    return;
-                }
-
-                var rooms = [];
-                var added = false;
-                $.each(data, function (index, obj) {
-                    if (obj.tenant_id == null || obj.tenant_id.length < 1) {
-                        // TODO: move this to server-side
-                        rooms.push('<option value="' + obj.number + '">' + obj.number + '</option>');
-                        added = true;
-                    }
-                });
-
-                if (!added) {
-                    $('#save').prop('disabled', true);
-                    swal('Kan ikke opprette bruker', 'Ingen ledige rom tilgjengelig.', 'error');
-                } else {
-                    $('#room').html(rooms.join(''))
-                }
-            });
-
             $('#save').on('click', function () {
                 $.post('./', {
                     ssn: $('#ssn').val(),
                     first_name: $('#first_name').val(),
                     last_name: $('#last_name').val(),
-                    /*address: [{
-                     name: 'TODO',
-                     postcode: -1,
-                     region: 'TODO',
-                     municipality: 'TODO'
-                     }],*/
                     phone: $('#phone').val(),
                     mail: $('#mail').val(),
-                    mailbox: $('#mailbox').val(),
-                    room: $('#room').val(),
                     lease: []
                 }, function (data) {
                     window.location = 'list';

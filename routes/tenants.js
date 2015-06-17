@@ -68,17 +68,33 @@ module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
         });
     });
     router.put('/:id', function (req, res) {
-        // TODO: sanetize req.params.id
+        tenantHandler.updateTenantById(req.params.id, req.body, function () {
+            res.status(200).end();
+        });
+
+    });
+
+    router.put('/lease/:id', function (req, res) {
         mailboxHandler.unassignMailboxFromTenantById(req.params.id);
         roomHandler.unassignRoomFromTenantById(req.params.id);
 
-        tenantHandler.updateTenantById(req.params.id, req.body, function () {
-            res.status(200).end();
+        tenantHandler.newTenantLease(req.params.id, req.body, function () {
+            console.log('Updated tenant with new lease!');
         });
 
         mailboxHandler.assignMailboxToTenant(req.params.id, req.body.mailbox);
         roomHandler.assignRoomToTenant(req.params.id, req.body.room);
     });
+    router.delete('/lease/:id', function (req, res) {
+        mailboxHandler.unassignMailboxFromTenantById(req.params.id);
+        roomHandler.unassignRoomFromTenantById(req.params.id);
+
+        tenantHandler.deactivateLastTenantLease(req.params.id, function () {
+            console.log('Deactivated tenants last lease!');
+        });
+    });
+
+
     router.delete('/:id', function (req, res) {
         mailboxHandler.unassignMailboxFromTenantById(req.params.id);
         roomHandler.unassignRoomFromTenantById(req.params.id);
