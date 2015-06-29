@@ -141,7 +141,7 @@ block content
                     url: '../lease/#{tenant.id}',
                     type: 'DELETE',
                     success: function (result) {
-                        window.location = '/edit/#{tenant.id}';
+                        window.location = '/tenants/edit/#{tenant.id}';
                     }
                 });
 
@@ -161,7 +161,7 @@ block content
                         active: true
                     },
                     success: function (result) {
-                        window.location = '/tenants/list';
+                        window.location = '/tenants/edit/#{tenant.id}';
                     }
                 });
 

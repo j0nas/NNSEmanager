@@ -78,12 +78,13 @@ module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
         mailboxHandler.unassignMailboxFromTenantById(req.params.id);
         roomHandler.unassignRoomFromTenantById(req.params.id);
 
-        tenantHandler.newTenantLease(req.params.id, req.body, function () {
-            console.log('Updated tenant with new lease!');
-        });
-
         mailboxHandler.assignMailboxToTenant(req.params.id, req.body.mailbox);
         roomHandler.assignRoomToTenant(req.params.id, req.body.room);
+
+        tenantHandler.newTenantLease(req.params.id, req.body, function () {
+            console.log('Updated tenant with new lease!');
+            res.sendStatus(200);
+        });
     });
     router.delete('/lease/:id', function (req, res) {
         mailboxHandler.unassignMailboxFromTenantById(req.params.id);
@@ -91,6 +92,7 @@ module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
 
         tenantHandler.deactivateLastTenantLease(req.params.id, function () {
             console.log('Deactivated tenants last lease!');
+            res.sendStatus(200);
         });
     });
 
