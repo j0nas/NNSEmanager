@@ -2,10 +2,14 @@ extends ../layout
 block content
     script(src='/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
     link(type='text/css' rel='stylesheet' href='/bower_components/bootstrap-table/dist/bootstrap-table.min.css')
-    h1 Leietakere
+
+    if url == "active"
+        h1 Aktive leietakere
+    else
+        h1 Alle leietakere
     br
 
-    table#tenants(data-toggle='table' data-url='/tenants/' data-show-toggle='true' data-show-columns='true' data-search='true' data-select-item-name='toolbar1')
+    table#tenants(data-toggle='table' data-url='/tenants/#{url}' data-show-toggle='true' data-show-columns='true' data-search='true' data-select-item-name='toolbar1')
         thead(align='left')
             tr
                 th(data-field='ssn' data-sortable='true') Personnummer
@@ -13,8 +17,10 @@ block content
                 th(data-field='last_name' data-sortable='true') Etternavn
                 th(data-field='phone' data-sortable='true') Telefon
                 th(data-field='mail' data-sortable='true') E-post
-                th(data-field='mailbox' data-sortable='true') Postboks
-                th(data-field='room' data-sortable='true') Rom
+                th(data-field='active' data-sortable='true') Aktivt leieforhold
+                //th(data-field='mailbox' data-sortable='true') Postboks
+                //th(data-field='room' data-sortable='true') Rom
+                //th(data-field='lease' data-sortable='true') Leieforhold
                 th(data-field='operate' data-formatter='operateFormatter' data-events='operateEvents') Handlinger
 
     button.btn.btn-default#to-pdf(style='margin-top: 5px;') Eksporter til PDF

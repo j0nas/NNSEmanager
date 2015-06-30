@@ -51,7 +51,7 @@ block content
                     mail: $('#mail').val(),
                     lease: []
                 }, function (data) {
-                    window.location = 'list';
+                    window.location = 'edit/' + data;
                 });
 
                 return false;

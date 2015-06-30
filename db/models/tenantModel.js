@@ -6,6 +6,7 @@ var tenantSchema = mongoose.Schema({
     last_name: String,
     phone: String,
     mail: String,
+    active: Boolean,
     lease: [{
         contract_start_date: Date,
         contract_termination_date: Date,

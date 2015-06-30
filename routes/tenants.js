@@ -6,9 +6,14 @@ module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
     router.get('/new', function (req, res, next) {
         res.render('tenant/new')
     });
+
     router.get('/list', function (req, res, next) {
-        res.render('tenant/list')
+        res.render('tenant/list', {url: 'active'})
     });
+    router.get('/listall', function (req, res, next) {
+        res.render('tenant/list', {url: 'all'})
+    });
+
     router.get('/edit/:id', function (req, res, next) {
         tenantHandler.getTenantById(req.params.id, function (data) {
             res.render('tenant/edit', {
@@ -52,13 +57,27 @@ module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
         tenantHandler.saveTenant(req.body, function (err, tenant) {
             if (err) {
                 console.log('An error has occurred: ' + JSON.stringify(err));
-                res.redirect(500, '/')
+                res.redirect(500, '/');
             } else {
                 mailboxHandler.assignMailboxToTenant(tenant._id, tenant.mailbox);
                 roomHandler.assignRoomToTenant(tenant._id, tenant.room);
-                res.status(201).end();
+                res.send(tenant._id);
             }
         });
+    });
+
+
+    router.get('/all', function (req, res, next) {
+        tenantHandler.getAllTenants(function (collection) {
+                res.send(collection);
+            }
+        )
+    });
+    router.get('/active', function (req, res, next) {
+        tenantHandler.getAllActiveTenants(function (collection) {
+                res.send(collection);
+            }
+        )
     });
 
     // ELEMENT URI RESTful API

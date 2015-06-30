@@ -3,6 +3,7 @@ var tenantModel = require("../models/tenantModel.js").Tenant;
 module.exports = {
     saveTenant: function (tenant, next) {
         var tenantToSave = new tenantModel(tenant);
+        tenantToSave.active = false;
         tenantToSave.save(function (err, res) {
             next(err, res);
         });
@@ -15,6 +16,11 @@ module.exports = {
     },
     getAllTenants: function (next) {
         tenantModel.find(function (err, collection) {
+            next(collection);
+        });
+    },
+    getAllActiveTenants: function (next) {
+        tenantModel.find({'active': true}, function (err, collection) {
             next(collection);
         });
     },
@@ -32,9 +38,9 @@ module.exports = {
     },
 
     deactivateLastTenantLease: function (id, next) {
-
         tenantModel.findOne({_id: id}, function (err, res) {
             res.lease[res.lease.length - 1].active = false;
+            res.active = false;
 
             tenantModel.findOneAndUpdate({_id: id}, res, {new: true}, function () {
                 if (next) {
@@ -54,6 +60,7 @@ module.exports = {
                 safety_deposit: obj.safety_deposit,
                 active: obj.active
             });
+            res.active = true;
 
             tenantModel.findOneAndUpdate({_id: id}, res, {new: true}, function () {
                 if (next) {
