@@ -17,28 +17,51 @@ block content
                 th(data-field='last_name' data-sortable='true') Etternavn
                 th(data-field='phone' data-sortable='true') Telefon
                 th(data-field='mail' data-sortable='true') E-post
-                th(data-field='active' data-sortable='true') Aktivt leieforhold
+                if url != "active"
+                    th(data-field='active' data-sortable='true') Aktivt leieforhold
                 //th(data-field='mailbox' data-sortable='true') Postboks
                 //th(data-field='room' data-sortable='true') Rom
                 //th(data-field='lease' data-sortable='true') Leieforhold
                 th(data-field='operate' data-formatter='operateFormatter' data-events='operateEvents') Handlinger
 
-    button.btn.btn-default#to-pdf(style='margin-top: 5px;') Eksporter til PDF
+    button.btn.btn-default#to-pdf(style='margin: 5px 5px 0 0;') Eksporter til PDF
+    button.btn.btn-default#generate-invoices(style='margin-top: 5px;') Generer fakturaer
 
     script.
         $(function () {
-            $('#to-pdf').on('click', function () {
+            var $pdf = $('#to-pdf');
+            $pdf.on('click', function () {
                 // Hide 'operations' column so it won't be printed to pdf.
                 $('#tenants').bootstrapTable('hideColumn', 'operate');
+
+                $pdf.prop('disabled', true);
+                var oldVal = $pdf.text();
+                $pdf.text('Vennligst vent ..')
 
                 $.post('pdf', {
                     table: $('#tenants').html()
                 }, function (res) {
-                    swal(res);
                     $('#tenants').bootstrapTable('showColumn', 'operate');
+                    $('#to-pdf').prop('disabled', false);
+                    $pdf.text(oldVal);
+                    swal(res);
                 });
-            })
-        })
+            });
+
+            var $invoices = $('#generate-invoices');
+            $invoices.on('click', function () {
+
+                $invoices.prop('disabled', true);
+                var oldVal = $invoices.text();
+                $invoices.text('Vennligst vent ..')
+
+                $.post('invoices', function (res) {
+                    $invoices.prop('disabled', false);
+                    $invoices.text(oldVal);
+                    swal(res);
+                });
+            });
+        });
 
         function operateFormatter(value, row, index) {
             return '<a class="edit ml10" style="padding-right: 10px" href="javascript:void(0)" title="Rediger"><i class="glyphicon glyphicon-edit"></i></a>' +

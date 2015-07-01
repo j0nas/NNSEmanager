@@ -1,4 +1,4 @@
-var express = require('express');
+﻿var express = require('express');
 var router = express.Router();
 
 module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
@@ -44,6 +44,64 @@ module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
         });
 
     });
+
+    // CSV file header
+    var initHeader = 'Art.;Dato;Bilag;Mva;debetkonto;kreditkonto;beløp;\n';
+    var csvString = initHeader;
+
+    var initAddressHeader = 'kontonummer;Navn;adresse;postnummer;Poststed;telefonnummer;adresse2;\n'
+    var csvAddressString = initAddressHeader;
+
+    router.post('/invoices', function (req, res) {
+        tenantHandler.getAllActiveTenants(function (tenants) {
+            if (tenants.length < 1) {
+                res.sendStatus(500);
+                return;
+            }
+
+            // Get today's date as DD.MM.YY
+            var date = new Date();
+            var year = date.getFullYear() + '';
+            var currentDate = date.getDate() + '.' + date.getMonth() + '.' + year.slice(2, 4);
+
+            // Reset headers
+            csvString = initHeader;
+            csvAddressString = initAddressHeader;
+
+            for (var i = 0; i < tenants.length; i++) {
+                if (tenants[i].lease.length < 1 || !tenants[i].lease[tenants[i].lease.length - 1].room) {
+                    var err = 'Fant ikke leie-data for leietaker ' + tenants[i].first_name + ' ' + tenants[i].last_name;
+                    console.log(err);
+                    res.send(err);
+                }
+
+                printRoom(tenants[i], i == (tenants.length - 1), currentDate, res);
+            }
+        });
+    });
+    function printRoom(tenant, lastTenant, date, res) {
+        roomHandler.getRoomByNumber(tenant.lease[tenant.lease.length - 1].room, function (room) {
+            if (!room || !room.price) {
+                var err = 'Fant ikke rom-data for leietaker ' + tenant.first_name + ' ' + tenant.last_name;
+                console.log(err);
+                res.send(err);
+                return;
+            }
+
+            csvString += '1;' + date + ';' + 'N/A;' + '9;' + 'N/A;' + ';' + room.price + ';\n';
+            csvAddressString += 'N/A;' + tenant.first_name + ' ' + tenant.last_name + ';' + 'John Colletts Allé 110;' +
+                '0870;' + 'Oslo;' + ';' + 'PB. ' + tenant.lease[tenant.lease.length - 1].mailbox + ';\n';
+
+            if (lastTenant == true) {
+                var fs = require('fs');
+                fs.writeFile('./Invoices.csv', csvString, function () {
+                    fs.writeFile('./Addresses.csv', csvAddressString, function () {
+                        res.sendStatus(200);
+                    });
+                });
+            }
+        });
+    }
 
     // COLLECTION URI RESTful API
     router.get('/', function (req, res, next) {
