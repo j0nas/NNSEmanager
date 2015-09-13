@@ -55,7 +55,7 @@ block content
                 var oldVal = $invoices.text();
                 $invoices.text('Vennligst vent ..')
 
-                $.post('invoices', function (res) {
+                $.post('../tenants/invoices', function (res) {
                     $invoices.prop('disabled', false);
                     $invoices.text(oldVal);
                     swal(res);
