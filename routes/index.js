@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('tenant/list');
+    res.render('tenant/list', {url: 'active'});
 });
 
 module.exports = router;
