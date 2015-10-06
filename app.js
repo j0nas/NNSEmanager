@@ -25,8 +25,9 @@ app.use('/', require('./routes/index'));
 var tenantHandler = require(path.join(__dirname, "db/handlers/tenantHandler.js"));
 var mailboxHandler = require(path.join(__dirname, "db/handlers/mailboxHandler.js"));
 var roomHandler = require(path.join(__dirname, "db/handlers/roomHandler.js"));
+var invoiceHandler = require(path.join(__dirname, "db/handlers/invoiceHandler.js"));
 
-app.use('/tenants', require('./routes/tenants')(tenantHandler, mailboxHandler, roomHandler));
+app.use('/tenants', require('./routes/tenants')(tenantHandler, mailboxHandler, roomHandler, invoiceHandler));
 app.use('/mailboxes', require('./routes/mailboxes')(mailboxHandler));
 app.use('/rooms', require('./routes/rooms')(roomHandler));
 

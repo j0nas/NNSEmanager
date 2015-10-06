@@ -1,7 +1,7 @@
 ﻿var express = require('express');
 var router = express.Router();
 
-module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
+module.exports = function (tenantHandler, mailboxHandler, roomHandler, invoiceHandler) {
     // FRONT-END VIEW RENDERING
     router.get('/new', function (req, res, next) {
         res.render('tenant/new')
@@ -52,31 +52,52 @@ module.exports = function (tenantHandler, mailboxHandler, roomHandler) {
     var initAddressHeader = 'kontonummer;Navn;adresse;postnummer;Poststed;telefonnummer;adresse2;\n'
     var csvAddressString = initAddressHeader;
 
-    router.post('/invoices', function (req, res) {
-        tenantHandler.getAllActiveTenants(function (tenants) {
-            if (tenants.length < 1) {
-                res.sendStatus(500);
+    function persistInvoice(tenant, date, id) {
+        roomHandler.getRoomByNumber(tenant.lease[tenant.lease.length - 1].room, function (result) {
+            if (!result) {
+                console.log("PersistInvoice: an error occurred when getting room number.");
                 return;
             }
 
-            // Get today's date as DD.MM.YY
-            var date = new Date();
-            var year = date.getFullYear() + '';
-            var currentDate = date.getDate() + '.' + date.getMonth() + '.' + year.slice(2, 4);
+            invoiceHandler.saveInvoice({
+                id_num: id,
+                tenant_id: tenant._id,
+                amount: result.price,
+                date: date
+            });
+        });
+    }
 
-            // Reset headers
-            csvString = initHeader;
-            csvAddressString = initAddressHeader;
+    router.post('/invoices', function (req, res) {
+        invoiceHandler.getLastInvoice(function (lastid) {
+            var id = lastid;
 
-            for (var i = 0; i < tenants.length; i++) {
-                if (tenants[i].lease.length < 1 || !tenants[i].lease[tenants[i].lease.length - 1].room) {
-                    var err = 'Fant ikke leie-data for leietaker ' + tenants[i].first_name + ' ' + tenants[i].last_name;
-                    console.log(err);
-                    res.send(err);
+            tenantHandler.getAllActiveTenants(function (tenants) {
+                if (tenants.length < 1) {
+                    res.sendStatus(500);
+                    return;
                 }
 
-                printRoom(tenants[i], i == (tenants.length - 1), currentDate, res);
-            }
+                // Get today's date as DD.MM.YY
+                var date = new Date();
+                var year = date.getFullYear() + '';
+                var currentDate = date.getDate() + '.' + date.getMonth() + '.' + year.slice(2, 4);
+
+                // Reset headers
+                csvString = initHeader;
+                csvAddressString = initAddressHeader;
+
+                for (var i = 0; i < tenants.length; i++) {
+                    if (tenants[i].lease.length < 1 || !tenants[i].lease[tenants[i].lease.length - 1].room) {
+                        var err = 'Fant ikke leie-data for leietaker ' + tenants[i].first_name + ' ' + tenants[i].last_name;
+                        console.log(err);
+                        res.send(err);
+                    } else {
+                        printRoom(tenants[i], i == (tenants.length - 1), currentDate, res);
+                        persistInvoice(tenants[i], date, id++);
+                    }
+                }
+            });
         });
     });
     function printRoom(tenant, lastTenant, date, res) {
