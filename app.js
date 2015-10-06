@@ -30,6 +30,7 @@ var invoiceHandler = require(path.join(__dirname, "db/handlers/invoiceHandler.js
 app.use('/tenants', require('./routes/tenants')(tenantHandler, mailboxHandler, roomHandler, invoiceHandler));
 app.use('/mailboxes', require('./routes/mailboxes')(mailboxHandler));
 app.use('/rooms', require('./routes/rooms')(roomHandler));
+app.use('/invoices', require('./routes/invoices')(invoiceHandler));
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/NNSEdb', function (error) {

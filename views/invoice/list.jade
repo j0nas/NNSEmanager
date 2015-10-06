@@ -1,0 +1,66 @@
+extends ../layout
+block content
+    script(src='/bower_components/bootstrap-table/dist/bootstrap-table.min.js')
+    link(type='text/css' rel='stylesheet' href='/bower_components/bootstrap-table/dist/bootstrap-table.min.css')
+
+    h1 Faktura
+    br
+
+    table#invoices(data-toggle='table' data-url='/invoices/' data-show-toggle='true' data-show-columns='true' data-search='true' data-select-item-name='toolbar1')
+        thead(align='left')
+            tr
+                th(data-field='id_num' data-sortable='true') Fakturanummer
+                th(data-field='tenant_id' data-sortable='true') Bruker-ID
+                th(data-field='amount' data-sortable='true') Beløp
+                th(data-field='date' data-sortable='true') Dato
+                th(data-field='operate' data-formatter='operateFormatter' data-events='operateEvents') Handlinger
+
+    button.btn.btn-default#to-pdf(style='margin-top: 5px;') Eksporter til PDF
+
+    script.
+        $(function () {
+            $('#to-pdf').on('click', function () {
+                // Hide 'operations' column so it won't be printed to pdf.
+                $('#invoices').bootstrapTable('hideColumn', 'operate');
+
+                $.post('pdf', {
+                    table: $('#invoices').html()
+                }, function (res) {
+                    swal(res);
+                    $('#invoices').bootstrapTable('showColumn', 'operate');
+                });
+            })
+        })
+
+        function operateFormatter(value, row, index) {
+            return '<a class="edit ml10" style="padding-right: 10px" href="javascript:void(0)" title="Rediger"><i class="glyphicon glyphicon-edit"></i></a>' +
+                    '<a class="remove ml10" href="javascript:void(0)" title="Remove"><i class="glyphicon glyphicon-remove"></i></a>';
+        }
+
+        window.operateEvents = {
+            'click .edit': function (e, value, row, index) {
+                window.location = '/invoices/edit/' + row._id;
+            },
+            'click .remove': function (e, value, row, index) {
+                //console.log(row._id);
+                swal({
+                    title: 'Er du sikker?',
+                    text: 'Denne handlingen kan ikke reverseres.',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Bekreft',
+                    cancelButtonText: 'Avbryt',
+                    closeOnConfirm: true
+                }, function () {
+                    $.ajax({
+                        url: '/invoices/' + row._id,
+                        type: 'DELETE',
+                        success: function (result) {
+                            console.log(result);
+                            $('#invoices').bootstrapTable('refresh');
+                        }
+                    });
+                });
+            }
+        };

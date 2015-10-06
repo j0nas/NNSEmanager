@@ -1,0 +1,47 @@
+extends ../layout
+block content
+    form.form-horizontal(method='post', autocomplete='off')
+        fieldset
+            // Form Name
+            legend Rediger faktura
+            .form-group
+                label.col-md-4.control-label(for='id_num') Faktura-nummer
+                .col-md-4
+                    input#id_num.form-control.input-md(name='id_num', type='number', placeholder='', required='', value='#{invoice.id_num}')
+            .form-group
+                label.col-md-4.control-label(for='tenant_id') Bruker-ID
+                .col-md-4
+                    input#tenant_id.form-control.input-md(name='tenant_id', type='text', placeholder='', required='', value='#{invoice.tenant_id}').form-group
+                label.col-md-4.control-label(for='amount') Beløp
+                .col-md-4
+                    input#amount.form-control.input-md(name='amount', type='number', placeholder='', required='', value='#{invoice.amount}').form-group
+                label.col-md-4.control-label(for='tenant_id') Dato
+                .col-md-4
+                    input#date.form-control.input-md(name='date', type='text', placeholder='', required='', value='#{invoice.date}')
+            hr
+            .form-group
+                label.col-md-4.control-label(for='save') Oppdater faktura
+                .col-md-4
+                    button#update.btn.btn-success(name='update') Oppdater
+    script.
+        $(function () {
+            $('#update').on('click', function () {
+                console.log('PUT');
+
+                $.ajax({
+                    url: '../#{invoice.id}',
+                    type: 'PUT',
+                    data: {
+                        id_num: $('#id_num').val(),
+                        tenant_id: $('#tenant_id').val(),
+                        amount: $('#amount').val(),
+                        date: $('#date').val(),
+                    },
+                    success: function (result) {
+                        window.location = '/invoices/list';
+                    }
+                });
+
+                return false;
+            });
+        });
