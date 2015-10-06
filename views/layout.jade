@@ -49,5 +49,12 @@ html
                             span.caret
                         ul.dropdown-menu(role='menu')
                             li: a(href='/rooms/new') Opprette nytt rom
+                    .btn-group
+                        a.btn.btn-default(type='button', href='/invoices/list') Faktura
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown' aria-expanded='false')
+                            span.sr-only Toggle Dropdown
+                            span.caret
+                        ul.dropdown-menu(role='menu')
+                            li: a(href='/invoices/new') Opprette ny faktura
         br
         block content

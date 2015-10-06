@@ -5,16 +5,18 @@ block content
             // Form Name
             legend Ny faktura
             .form-group
-                label.col-md-4.control-label(for='id_num') Faktura-nummer
+                label.col-md-4.control-label(for='id_num') Fakturanummer
                 .col-md-4
                     input#id_num.form-control.input-md(name='id_num', type='number', placeholder='', required='', value='')
             .form-group
                 label.col-md-4.control-label(for='tenant_id') Bruker-ID
                 .col-md-4
-                    input#tenant_id.form-control.input-md(name='tenant_id', type='text', placeholder='', required='', value='').form-group
+                    input#tenant_id.form-control.input-md(name='tenant_id', type='text', placeholder='', required='', value='')
+            .form-group
                 label.col-md-4.control-label(for='amount') Beløp
                 .col-md-4
-                    input#amount.form-control.input-md(name='amount', type='number', placeholder='', required='', value='').form-group
+                    input#amount.form-control.input-md(name='amount', type='number', placeholder='', required='', value='')
+            .form-group
                 label.col-md-4.control-label(for='tenant_id') Dato
                 .col-md-4
                     input#date.form-control.input-md(name='date', type='text', placeholder='', required='', value='')
