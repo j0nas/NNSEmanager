@@ -11,10 +11,12 @@ block content
             .form-group
                 label.col-md-4.control-label(for='tenant_id') Bruker-ID
                 .col-md-4
-                    input#tenant_id.form-control.input-md(name='tenant_id', type='text', placeholder='', required='', value='#{invoice.tenant_id}').form-group
+                    input#tenant_id.form-control.input-md(name='tenant_id', type='text', placeholder='', required='', value='#{invoice.tenant_id}')
+            .form-group
                 label.col-md-4.control-label(for='amount') Beløp
                 .col-md-4
-                    input#amount.form-control.input-md(name='amount', type='number', placeholder='', required='', value='#{invoice.amount}').form-group
+                    input#amount.form-control.input-md(name='amount', type='number', placeholder='', required='', value='#{invoice.amount}')
+            .form-group
                 label.col-md-4.control-label(for='tenant_id') Dato
                 .col-md-4
                     input#date.form-control.input-md(name='date', type='text', placeholder='', required='', value='#{invoice.date}')
